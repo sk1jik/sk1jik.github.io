@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Вадим — fullstack-разработчик: боты, сайты, монтаж</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F3FF;--surface:#FFFFFF;--ink:#17123A;--muted:#5E5780;--line:#E0D8F5;
+  --blue:#6C47FF;--on-blue:#FFFFFF;--yellow:#D4FF3A;--on-yellow:#17123A;--pink:#E23D93;--deep:#17123A;--on-deep:#F7F3FF;
+  --bubble:#EAE3FF;--bubble-me:#6C47FF;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0D0B1E;--surface:#181433;--ink:#F1EDFF;--muted:#ABA3D4;--line:#2E2757;--blue:#7452FF;--pink:#FF5CA8;--deep:#231C52;--on-deep:#F1EDFF;--bubble:#272054;}
+}
+:root[data-theme="dark"]{--bg:#0D0B1E;--surface:#181433;--ink:#F1EDFF;--muted:#ABA3D4;--line:#2E2757;--blue:#7452FF;--pink:#FF5CA8;--deep:#231C52;--on-deep:#F1EDFF;--bubble:#272054;}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 "Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+h1,h2,h3{font-family:"Unbounded","Manrope",system-ui,sans-serif;line-height:1.1;margin:0;letter-spacing:-.01em}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+section{padding:84px 0}
+
+/* header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:"Unbounded",sans-serif;font-weight:800;text-decoration:none;font-size:18px}
+.logo i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--yellow);margin-left:4px}
+nav{display:flex;gap:22px;font-weight:500;font-size:15px}
+nav a{text-decoration:none;color:var(--muted)}
+nav a:hover{color:var(--ink)}
+@media(max-width:640px){nav a:not(:last-child){display:none}}
+
+/* hero */
+.hero{padding:64px 0 90px}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(34px,6vw,64px);font-weight:800}
+.hero p.lead{font-size:19px;color:var(--muted);max-width:30em;margin:24px 0 32px}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;padding:15px 24px;border-radius:14px;font-weight:700;text-decoration:none;border:2px solid var(--ink);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.main{background:var(--blue);border-color:var(--blue);color:#fff}
+.facts{display:flex;gap:28px;margin-top:40px;color:var(--muted);font-size:15px;flex-wrap:wrap}
+.facts b{display:block;color:var(--ink);font-family:"Unbounded",sans-serif;font-size:20px}
+
+.phone{background:var(--surface);border:2px solid var(--ink);border-radius:30px;padding:18px;box-shadow:10px 10px 0 var(--blue);max-width:380px;justify-self:center;width:100%}
+.phone-top{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.ava{width:42px;height:42px;border-radius:50%;background:var(--yellow);color:var(--on-yellow);display:grid;place-items:center;font:800 18px "Unbounded",sans-serif}
+.phone-top small{display:block;color:var(--muted);font-size:13px;line-height:1.2}
+.phone-top strong{line-height:1.2}
+.chat{min-height:330px;display:flex;flex-direction:column;gap:9px}
+.msg{background:var(--bubble);padding:11px 15px;border-radius:18px 18px 18px 5px;max-width:88%;font-size:15.5px;line-height:1.45;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+.msg.show{opacity:1;transform:none}
+.keys{display:grid;gap:8px;opacity:0;transition:opacity .4s}
+.keys.show{opacity:1}
+.keys a{text-align:center;text-decoration:none;font-weight:700;font-size:15px;padding:11px;border-radius:12px;background:var(--bubble);border:1.5px solid var(--blue)}
+.keys a:hover{background:var(--blue);color:#fff}
+@media(max-width:860px){.hero .wrap{grid-template-columns:1fr}}
+
+/* services */
+.head{max-width:640px;margin-bottom:40px}
+.head h2{font-size:clamp(28px,4.5vw,44px)}
+.head p{color:var(--muted);margin:14px 0 0}
+.svc{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:auto auto;gap:18px}
+.box{border-radius:26px;padding:32px}
+.box h3{font-size:26px;margin-bottom:12px}
+.box ul{margin:16px 0 0;padding-left:20px}
+.box li{margin:6px 0}
+.b-bot{grid-row:span 2;background:var(--blue);color:var(--on-blue);display:flex;flex-direction:column;justify-content:space-between;min-height:420px}
+.b-bot h3{font-size:36px}
+.b-site{background:var(--yellow);color:var(--on-yellow)}
+.b-video{background:var(--deep);color:var(--on-deep)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.tags span{border:1.5px solid currentColor;border-radius:99px;padding:5px 14px;font-size:14px;font-weight:500}
+@media(max-width:860px){.svc{grid-template-columns:1fr}.b-bot{grid-row:auto;min-height:0}}
+
+/* works */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+.tab{font:700 15px "Manrope",sans-serif;padding:11px 20px;border-radius:99px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.slot{border:2px dashed var(--line);border-radius:20px;aspect-ratio:4/3;display:grid;place-items:center;text-align:center;padding:20px;color:var(--muted);background:var(--surface)}
+.slot b{display:block;color:var(--ink);font-family:"Unbounded",sans-serif;font-size:16px;margin-bottom:6px}
+.slot.v{aspect-ratio:16/9}
+a.slot{text-decoration:none;transition:transform .15s,border-color .15s}
+a.slot.real{aspect-ratio:auto;min-height:190px;border-style:solid;border-color:var(--ink);text-align:left;place-items:end start}
+a.slot.real:hover{transform:translateY(-3px);border-color:var(--blue)}
+a.slot.real b{color:var(--blue);font-size:15px;word-break:break-all}
+.note a{color:var(--blue);font-weight:700}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+
+/* timeline */
+.tl{background:var(--surface);border:2px solid var(--ink);border-radius:22px;padding:20px;margin-top:40px;overflow-x:auto}
+.tl-in{min-width:560px}
+.track{display:flex;gap:6px;margin:8px 0;height:34px;align-items:stretch}
+.track i{border-radius:8px;display:block}
+.tl-ruler{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:10px}
+.tl-cap{margin:14px 0 0;color:var(--muted);font-size:15px}
+
+/* process */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:s;border-top:2px solid var(--ink)}
+.step{padding:26px 22px 0 0;position:relative}
+.step::before{counter-increment:s;content:counter(s);position:absolute;top:-17px;left:0;width:32px;height:32px;border-radius:50%;background:var(--yellow);color:var(--on-yellow);display:grid;place-items:center;font:800 14px "Unbounded",sans-serif}
+.step h3{font-size:17px;margin:12px 0 8px}
+.step p{margin:0;color:var(--muted);font-size:15.5px}
+@media(max-width:860px){.steps{grid-template-columns:1fr;border-top:0;border-left:2px solid var(--ink);padding-left:26px}.step{padding:0 0 28px}.step::before{top:0;left:-43px}}
+
+/* contact */
+.cta{background:var(--blue);color:#fff;border-radius:32px;padding:56px 36px;text-align:center}
+.cta h2{font-size:clamp(28px,5vw,48px);max-width:14em;margin:0 auto 16px}
+.cta p{max-width:32em;margin:0 auto 28px;opacity:.9}
+.cta .btn{background:var(--yellow);color:#14162E;border-color:var(--yellow)}
+footer{padding:30px 0 50px;color:var(--muted);font-size:14px;text-align:center}
+.prog{position:fixed;top:env(safe-area-inset-top,0px);left:0;height:3px;width:0;background:linear-gradient(90deg,var(--blue),var(--pink));z-index:40}
+.hero{position:relative;overflow:hidden}
+.hero .wrap{position:relative;z-index:1}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;animation:flt 14s ease-in-out infinite alternate}
+.o1{width:380px;height:380px;background:var(--blue);top:-80px;right:-60px;opacity:.35}
+.o2{width:300px;height:300px;background:var(--pink);bottom:-60px;left:-80px;opacity:.45;animation-delay:-6s}
+@keyframes flt{to{transform:translate(40px,30px) scale(1.15)}}
+@keyframes up{from{opacity:0;transform:translateY(24px)}}
+.hero h1{animation:up .8s both}.hero .lead{animation:up .8s .15s both}.hero .btns{animation:up .8s .3s both}.hero .facts{animation:up .8s .45s both}
+.mw{overflow:hidden;padding:26px 0}
+.marq{background:var(--ink);color:var(--bg);padding:18px 0;transform:rotate(-1.2deg);margin:0 -12px}
+.marq div{display:flex;width:max-content;animation:mq 30s linear infinite;font:700 20px "Unbounded",sans-serif;white-space:nowrap}
+.marq span::after{content:"✦";margin:0 36px;color:var(--yellow)}
+@keyframes mq{to{transform:translateX(-50%)}}
+.js .rv{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}
+.js .rv.in{opacity:1;transform:none}
+.box{transition:transform .2s ease-out}
+.box,a.slot.real{position:relative}
+a.slot.real{overflow:hidden}
+a.slot.real::after{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(108,71,255,.22),transparent 60%);opacity:0;transition:opacity .2s;pointer-events:none}
+a.slot.real:hover::after{opacity:1}
+.tl-in{position:relative}
+.ph{position:absolute;top:0;bottom:0;width:2px;background:var(--yellow);box-shadow:0 0 14px var(--yellow);animation:ph 7s linear infinite;z-index:1}
+@keyframes ph{from{left:0}to{left:100%}}
+.cta{background:linear-gradient(120deg,var(--blue),var(--pink),var(--blue));background-size:200% 200%;animation:bg 9s ease infinite}
+@keyframes bg{50%{background-position:100% 50%}}
+.faq details{border-bottom:1px solid var(--line);padding:20px 0}
+.faq summary{cursor:pointer;font:700 18px "Unbounded",sans-serif;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:28px;line-height:1;color:var(--blue);transition:transform .25s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq p{margin:12px 0 0;color:var(--muted);max-width:42em}
+.crm{background:var(--surface);border:2px solid var(--ink);border-radius:26px;padding:22px;box-shadow:10px 10px 0 var(--pink)}
+.crm-top{display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;margin-bottom:20px}
+.crm-top small{display:block;color:var(--muted);font-size:13px}
+.crm-top b{font:800 22px "Unbounded",sans-serif}
+.crm-stats{display:flex;gap:28px;flex-wrap:wrap}
+.crm-add{display:flex;gap:8px;flex-wrap:wrap}
+.crm-add input{font:inherit;padding:11px 14px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:150px}
+.crm-add .btn{padding:11px 18px;cursor:pointer;font:700 15px "Manrope",sans-serif}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.col{background:var(--bg);border-radius:18px;padding:12px;min-height:180px}
+.col h4{margin:0 0 10px;display:flex;justify-content:space-between;font:700 13px "Unbounded",sans-serif}
+.col h4 span{color:var(--muted);font-family:"Manrope",sans-serif}
+.deal{background:var(--surface);border:1.5px solid var(--line);border-left:5px solid var(--c);border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:14.5px;animation:up .35s both}
+.deal b{display:block}
+.deal em{font-style:normal;color:var(--muted);font-size:13px}
+.deal .mv{display:flex;justify-content:space-between;margin-top:8px}
+.deal button{border:0;background:var(--bg);color:var(--ink);border-radius:8px;width:34px;height:28px;cursor:pointer;font-weight:700}
+.deal button:hover:not(:disabled){background:var(--blue);color:#fff}
+.deal button:disabled{opacity:.25;cursor:default}
+.slot.cc{display:block;padding:0;overflow:hidden;text-align:left;aspect-ratio:auto;transition:transform .2s;border-style:solid;border-color:var(--ink)}
+.slot.cc:hover{transform:translateY(-4px)}
+.pv{height:130px;padding:16px;display:flex;flex-direction:column;gap:8px;justify-content:flex-end}
+.pv i{display:block;height:8px;border-radius:4px;background:rgba(255,255,255,.8)}
+.pv i:nth-child(1){width:55%;height:14px}.pv i:nth-child(2){width:80%}.pv i:nth-child(3){width:35%;height:22px;background:#fff;border-radius:8px}
+.cc .tx{padding:16px 18px 20px}
+a.slot.cc{text-decoration:none}
+.op{margin-top:12px;font-weight:700;color:var(--blue)}
+.tg{display:inline-block;font-size:12px;font-weight:700;background:var(--yellow);color:var(--on-yellow);border-radius:99px;padding:2px 10px;margin-bottom:8px}
+@media(max-width:860px){.cols{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}.msg,.keys,.js .rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+<header><div class="wrap">
+  <a class="logo" href="#top">Вадим<i></i></a>
+  <nav><a href="#services">Услуги</a><a href="#works">Работы</a><a href="#crm">CRM</a><a href="#process">Как работаю</a><a href="#contact">Связаться</a></nav>
+</div></header>
+
+<main id="top">
+<section class="hero"><i class="orb o1"></i><i class="orb o2"></i><div class="wrap">
+  <div>
+    <h1>Делаю ботов, сайты и монтирую видео</h1>
+    <p class="lead">Я Вадим, fullstack-разработчик. Беру задачу целиком: придумываю, пишу, запускаю и довожу до результата, который работает без вашего участия.</p>
+    <div class="btns">
+      <a class="btn main" href="#contact">Обсудить проект</a>
+      <a class="btn" href="#works">Смотреть работы</a>
+    </div>
+    <div class="facts">
+      <div><b data-n="5">0</b>ботов в портфолио</div>
+      <div><b data-n="3">0</b>направления работы</div>
+      <div><b>24/7</b>боты всегда на связи</div>
+    </div>
+  </div>
+  <div class="phone" aria-label="Пример диалога с ботом">
+    <div class="phone-top"><div class="ava">В</div><div><strong>Вадим</strong><small>бот-визитка · онлайн</small></div></div>
+    <div class="chat" id="chat">
+      <div class="msg">Привет! Я Вадим, fullstack-разработчик.</div>
+      <div class="msg">Делаю Telegram-ботов, сайты и лендинги. А ещё монтирую видео.</div>
+      <div class="msg">Что вас интересует?</div>
+      <div class="keys">
+        <a href="#services">Бот для бизнеса или себя</a>
+        <a href="#services">Сайт или лендинг</a>
+        <a href="#services">Монтаж видео</a>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<div class="mw" aria-hidden="true"><div class="marq"><div><span>Telegram-боты</span><span>Сайты</span><span>Лендинги</span><span>Монтаж</span><span>Озвучка</span><span>Автоматизация</span><span>Fullstack</span><span>Telegram-боты</span><span>Сайты</span><span>Лендинги</span><span>Монтаж</span><span>Озвучка</span><span>Автоматизация</span><span>Fullstack</span></div></div></div>
+
+<section id="services"><div class="wrap">
+  <div class="head rv"><h2>Что я делаю</h2><p>Три направления, в каждом можно взять готовое решение или сделать под вашу идею.</p></div>
+  <div class="svc rv">
+    <div class="box b-bot">
+      <div>
+        <h3>Боты</h3>
+        <p>Автоматизирую то, что обычно делают руками: приём заявок, уведомления, поиск и сбор данных, игры и магазины внутри Telegram.</p>
+        <ul>
+          <li>Запись на занятия и услуги</li>
+          <li>Боты с оплатой и личным кабинетом</li>
+          <li>Новостные и мониторинг-боты, которые работают круглосуточно</li>
+          <li>Игровые механики: крутки, награды, виртуальная валюта</li>
+          <li>Админ-панель, чтобы управлять ботом без кода</li>
+        </ul>
+      </div>
+      <div class="tags"><span>Telegram Bot API</span><span>Python</span><span>Работает 24/7</span></div>
+    </div>
+    <div class="box b-site">
+      <h3>Сайты и лендинги</h3>
+      <p>Страницы, которые быстро грузятся, красиво выглядят на телефоне и приводят людей к действию.</p>
+      <ul><li>Лендинги под рекламу и услуги</li><li>Сайты-визитки и портфолио</li><li>Фронтенд и бэкенд в одних руках</li><li>CRM и панели для учёта заказов</li></ul>
+    </div>
+    <div class="box b-video">
+      <h3>Монтаж</h3>
+      <p>Ролики, озвучка, субтитры, звук. Собираю в цельную историю, а не просто склеиваю кадры.</p>
+      <ul><li>Динамичный монтаж для соцсетей</li><li>Озвучка и субтитры по ролям</li><li>Работа со звуком и цветом</li></ul>
+    </div>
+  </div>
+</div></section>
+
+<section id="works"><div class="wrap">
+  <div class="head rv"><h2>Работы</h2><p>Выберите направление, чтобы посмотреть примеры.</p></div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-t="bots">Боты</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="sites">Сайты</button>
+    <button class="tab" role="tab" aria-selected="false" data-t="video">Монтаж</button>
+  </div>
+  <div class="grid" id="grid"></div>
+  <p class="tl-cap note" id="note"></p>
+
+  <div class="tl" aria-hidden="true"><div class="tl-in">
+    <div class="ph"></div><div class="tl-ruler"><span>00:00</span><span>00:15</span><span>00:30</span><span>00:45</span><span>01:00</span></div>
+    <div class="track"><i style="flex:3;background:var(--blue)"></i><i style="flex:2;background:var(--yellow)"></i><i style="flex:4;background:var(--blue)"></i><i style="flex:2;background:var(--yellow)"></i></div>
+    <div class="track"><i style="flex:1;background:transparent"></i><i style="flex:5;background:var(--deep)"></i><i style="flex:3;background:var(--line)"></i><i style="flex:2;background:var(--deep)"></i></div>
+    <div class="track"><i style="flex:10;background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 7px)"></i></div>
+  </div>
+  <p class="tl-cap">Монтаж для меня — это ритм: видео, звук и текст на одной линии времени.</p></div>
+</div></section>
+
+<section id="crm"><div class="wrap">
+  <div class="head rv"><h2>CRM-демо</h2><p>Пример CRM, которую я могу собрать под ваши заказы: клиенты, этапы и суммы в одном месте. Попробуйте сами: двигайте сделки стрелками и добавляйте свои. Данные тестовые.</p></div>
+  <div class="crm rv">
+    <div class="crm-top">
+      <div class="crm-stats"><div><small>Сделок</small><b id="cN">0</b></div><div><small>В работе</small><b id="cS">0</b></div><div><small>Завершено</small><b id="cD">0</b></div></div>
+      <div class="crm-add"><input id="cName" placeholder="Клиент" aria-label="Клиент"><input id="cSum" type="number" min="0" placeholder="Сумма, ₽" aria-label="Сумма"><button class="btn main" id="cAdd" type="button">Добавить</button></div>
+    </div>
+    <div class="cols" id="cols"></div>
+  </div>
+</div></section>
+
+<section id="process"><div class="wrap">
+  <div class="head rv"><h2>Как мы работаем</h2></div>
+  <div class="steps rv">
+    <div class="step"><h3>Обсуждаем задачу</h3><p>Вы рассказываете идею, я задаю уточняющие вопросы.</p></div>
+    <div class="step"><h3>Согласуем цену и срок</h3><p>Называю стоимость и дату заранее, без сюрпризов.</p></div>
+    <div class="step"><h3>Делаю и показываю</h3><p>Присылаю промежуточный результат, чтобы вы могли влиять на него.</p></div>
+    <div class="step"><h3>Сдаю и поддерживаю</h3><p>Запускаю, объясняю как пользоваться и остаюсь на связи.</p></div>
+  </div>
+</div></section>
+
+<section id="faq" class="faq"><div class="wrap">
+  <div class="head rv"><h2>Частые вопросы</h2></div>
+  <div class="rv">
+    <details><summary>С чего начать?</summary><p>Напишите мне в Telegram и опишите идею своими словами. Остальное я уточню сам и предложу решение.</p></details>
+    <details><summary>Можно доработать то, что уже есть?</summary><p>Да. Могу взять готового бота или сайт, добавить функции, исправить ошибки или перенести на другой хостинг.</p></details>
+    <details><summary>Нужен ли свой сервер для бота?</summary><p>Боты должны работать постоянно, поэтому им нужен сервер. Помогу выбрать, настроить и запустить.</p></details>
+    <details><summary>Что нужно для монтажа?</summary><p>Исходники и пожелания: референсы, длительность и где ролик будет опубликован.</p></details>
+  </div>
+</div></section>
+
+<section id="contact"><div class="wrap">
+  <div class="cta rv">
+    <h2>Расскажите, что нужно сделать</h2>
+    <p>Напишите пару строк о задаче, и я отвечу с идеями, сроком и стоимостью.</p>
+    <a class="btn" href="https://t.me/sk1jikkk" target="_blank" rel="noopener">Написать в Telegram</a>
+  </div>
+</div></section>
+</main>
+<footer><div class="wrap">© 2026 Вадим. Боты, сайты, монтаж. Telegram: <a href="https://t.me/sk1jikkk" target="_blank" rel="noopener">@sk1jikkk</a></div></footer>
+
+<script>
+(function(){
+  var msgs=document.querySelectorAll('#chat .msg,#chat .keys');
+  var calm=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  msgs.forEach(function(m,i){ if(calm){m.classList.add('show');} else {setTimeout(function(){m.classList.add('show');},500+i*900);} });
+
+  var data={
+    bots:{cls:'',items:[['@clothesapp_bot','Крутка одежды и аксессуаров за виртуальные монеты: от масс-маркета до редких брендов.','https://t.me/clothesapp_bot'],['@p2pbybithunter_bot','Ищет P2P-ордера на Bybit по вашему диапазону цен и ключевым словам.','https://t.me/p2pbybithunter_bot'],['@avito_product_hunting_bot','Бот для поиска товаров на Авито.','https://t.me/avito_product_hunting_bot'],['@Frilanshelper_bot','Бот-помощник для фрилансеров.','https://t.me/Frilanshelper_bot'],['@Salelibrary_bot','Бот, который я сделал на заказ.','https://t.me/Salelibrary_bot']]},
+    sites:{cls:'',items:[['Лендинг кофейни','Меню, акции и кнопка заказа в Telegram. Одна страница, быстрая загрузка.','demo-coffee.html','linear-gradient(135deg,#6C47FF,#E23D93)','Демо'],['Сайт репетитора','Услуги, расписание и форма записи на занятие. Заявка приходит в Telegram.','demo-tutor.html','linear-gradient(135deg,#D4FF3A,#6C47FF)','Демо'],['Магазин одежды','Каталог с фильтрами, корзина и оформление заказа.','demo-shop.html','linear-gradient(135deg,#17123A,#E23D93)','Демо'],['Лендинг: Telegram-боты под ключ','Страница, которая продаёт мои услуги: что делаю, как работаю, кнопка связи.','demo-bots.html','linear-gradient(135deg,#E23D93,#D4FF3A)','Лендинг']]},
+    video:{cls:' v',items:[['Видео','Здесь будет превью ролика'],['Видео','Что было сделано в монтаже'],['Видео','Ссылка на видео']]}
+  };
+  var grid=document.getElementById('grid');
+  var note=document.getElementById('note');
+  function render(k){
+    grid.innerHTML=data[k].items.map(function(x){var inner='<div><b>'+x[0]+'</b>'+x[1]+'</div>';if(x[3])return '<a class="slot cc" href="'+x[2]+'" target="_blank" rel="noopener"><div class="pv" style="background:'+x[3]+'"><i></i><i></i><i></i></div><div class="tx"><span class="tg">'+(x[4]||'Демо')+'</span>'+inner+'<div class="op">Открыть →</div></div></a>';return x[2]?'<a class="slot real'+data[k].cls+'" href="'+x[2]+'" target="_blank" rel="noopener">'+inner+'</a>':'<div class="slot'+data[k].cls+'">'+inner+'</div>';}).join('');
+    note.innerHTML=k==='bots'?'Бот @Salelibrary_bot сделан на заказ. Подтвердить это может заказчица: <a href="https://t.me/gulzanayaparova" target="_blank" rel="noopener">@gulzanayaparova</a>.':(k==='sites'?'Это демо-страницы: нажмите на карточку, чтобы открыть. Они показывают, как я делаю сайты под разные ниши.':'');
+  }
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.tab').forEach(function(o){o.setAttribute('aria-selected',o===t);});
+      render(t.dataset.t);
+    });
+  });
+  render('bots');
+  var stages=['Новые','В работе','Оплата','Готово'],cc=['var(--blue)','var(--pink)','#FFB020','#22C55E'];
+  var deals=[{n:'Кофейня «Зерно»',t:'Бот заказов',s:15000,k:0},{n:'Студия Лайм',t:'Лендинг',s:12000,k:1},{n:'Анна',t:'Монтаж ролика',s:4000,k:2},{n:'Магазин «Север»',t:'Бот с оплатой',s:25000,k:3},{n:'Макс',t:'Сайт-визитка',s:9000,k:0}];
+  var cols=document.getElementById('cols');
+  function fm(n){return n.toLocaleString('ru-RU')+' ₽';}
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function crm(){
+    cols.innerHTML=stages.map(function(st,k){
+      var items=deals.map(function(x,i){return x.k!==k?'':'<div class="deal" style="--c:'+cc[k]+'"><b>'+esc(x.n)+'</b><em>'+esc(x.t)+' · '+fm(x.s)+'</em><div class="mv"><button data-i="'+i+'" data-d="-1" aria-label="Назад"'+(k?'':' disabled')+'>←</button><button data-i="'+i+'" data-d="1" aria-label="Вперёд"'+(k<3?'':' disabled')+'>→</button></div></div>';}).join('');
+      var cnt=deals.filter(function(x){return x.k===k;}).length;
+      return '<div class="col"><h4>'+st+'<span>'+cnt+'</span></h4>'+items+'</div>';
+    }).join('');
+    var open=0,done=0;deals.forEach(function(x){if(x.k===3)done+=x.s;else open+=x.s;});
+    document.getElementById('cN').textContent=deals.length;
+    document.getElementById('cS').textContent=fm(open);
+    document.getElementById('cD').textContent=fm(done);
+  }
+  cols.addEventListener('click',function(e){var b=e.target.closest('button[data-i]');if(!b||b.disabled)return;deals[+b.dataset.i].k+=+b.dataset.d;crm();});
+  document.getElementById('cAdd').addEventListener('click',function(){var n=document.getElementById('cName'),s=document.getElementById('cSum');if(!n.value.trim())return;deals.push({n:n.value.trim(),t:'Новая задача',s:Math.max(0,+s.value||0),k:0});n.value='';s.value='';crm();});
+  crm();
+  document.documentElement.classList.add('js');
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+  document.querySelectorAll('[data-n]').forEach(function(el){var n=+el.dataset.n,i=0;if(calm){el.textContent=n;return;}var t=setInterval(function(){i++;el.textContent=i;if(i>=n)clearInterval(t);},260);});
+  var prog=document.getElementById('prog');
+  addEventListener('scroll',function(){var h=document.documentElement;prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';},{passive:true});
+  if(!calm&&matchMedia('(hover:hover)').matches){
+    var sel='.box,a.slot.real';
+    document.addEventListener('pointermove',function(e){var c=e.target.closest&&e.target.closest(sel);if(!c)return;var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%');c.style.transform='perspective(800px) rotateX('+((.5-y)*6)+'deg) rotateY('+((x-.5)*8)+'deg) translateY(-3px)';});
+    document.addEventListener('pointerout',function(e){var c=e.target.closest&&e.target.closest(sel);if(c&&!c.contains(e.relatedTarget))c.style.transform='';});
+  }
+})();
+</script>
+</body>
+</html>

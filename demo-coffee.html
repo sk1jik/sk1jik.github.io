@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Зерно — кофейня (демо)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#FFF4E6;color:#2B1A12;font:17px/1.6 Manrope,sans-serif}
+h1,h2{font-family:"Playfair Display",serif;line-height:1.05;margin:0}
+.back{position:fixed;top:12px;left:12px;z-index:9;background:#2B1A12;color:#FFF4E6;padding:8px 14px;border-radius:99px;font-size:14px;text-decoration:none}
+.w{max-width:1000px;margin:0 auto;padding:0 22px}
+.hero{padding:110px 0 70px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+h1{font-size:clamp(42px,8vw,86px);font-weight:900}
+.hero p{max-width:26em;color:#6b5646;margin:20px 0 28px}
+.btn{display:inline-block;background:#FF7A1A;color:#fff;padding:15px 28px;border-radius:99px;font-weight:700;text-decoration:none;transition:transform .2s}.btn:hover{transform:scale(1.05)}
+.cup{aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFB26B,#FF7A1A 50%,#8A3B0E);display:grid;place-items:center;font-size:120px;box-shadow:0 30px 60px #8A3B0E55;animation:fl 5s ease-in-out infinite alternate}
+@keyframes fl{to{transform:translateY(-14px) rotate(4deg)}}
+h2{font-size:38px;margin-bottom:24px}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px}
+.it{background:#fff;border-radius:20px;padding:20px;display:flex;justify-content:space-between;gap:12px;transition:transform .2s}.it:hover{transform:translateY(-4px)}
+.it b{display:block;font-size:18px}.it small{color:#8a7565}.it span{font-weight:800;color:#FF7A1A;white-space:nowrap}
+.promo{background:#2B1A12;color:#FFF4E6;border-radius:28px;padding:44px 24px;margin:64px 0;text-align:center}
+.promo h2{margin-bottom:10px}.promo p{margin:0;opacity:.8}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:70px}
+.info div{border-top:3px solid #FF7A1A;padding-top:12px}.info b{display:block}
+footer{text-align:center;color:#8a7565;font-size:14px;padding:0 0 40px}
+@media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:90px}.cup{max-width:240px;font-size:90px}}
+</style></head><body>
+<a class="back" href="index.html">← Портфолио · демо</a>
+<div class="w">
+<section class="hero"><div><h1>Кофе, который будит город</h1><p>Свежая обжарка, домашняя выпечка и бариста, которые помнят ваш заказ. Заходите по дороге на работу.</p><a class="btn" href="https://t.me/sk1jik" target="_blank" rel="noopener">Заказать в Telegram</a></div><div class="cup">☕</div></section>
+<h2>Меню</h2>
+<div class="menu">
+<div class="it"><div><b>Эспрессо</b><small>Двойной, 60 мл</small></div><span>150 ₽</span></div>
+<div class="it"><div><b>Капучино</b><small>Молоко, плотная пенка</small></div><span>220 ₽</span></div>
+<div class="it"><div><b>Латте</b><small>Мягкий и сливочный</small></div><span>240 ₽</span></div>
+<div class="it"><div><b>Раф</b><small>Со сливками и ванилью</small></div><span>270 ₽</span></div>
+<div class="it"><div><b>Фильтр-кофе</b><small>Сорт дня</small></div><span>190 ₽</span></div>
+<div class="it"><div><b>Круассан</b><small>Сегодняшний, тёплый</small></div><span>160 ₽</span></div>
+</div>
+<div class="promo"><h2>−20% на второй напиток</h2><p>Каждое утро с 8:00 до 11:00. Приходите вдвоём.</p></div>
+<div class="info"><div><b>Адрес</b>ул. Примерная, 1</div><div><b>Часы работы</b>Ежедневно 8:00–22:00</div><div><b>Заказ</b>Через Telegram, заберёте без очереди</div></div>
+</div>
+<footer>Демо-страница · сделал Вадим</footer>
+</body></html>
